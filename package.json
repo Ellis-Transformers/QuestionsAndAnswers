@@ -1,0 +1,16 @@
+{
+  
+  "name": "questionsandanswers",
+  "description": "This is serverside application to serve the atelier web page",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Jung Hoan Kim",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {}
+}
