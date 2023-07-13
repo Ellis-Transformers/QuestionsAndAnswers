@@ -40,6 +40,12 @@ CREATE TABLE "Photos" (
     CONSTRAINT "Photos_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateIndex
+CREATE INDEX "Questions_question_helpfulness_idx" ON "Questions"("question_helpfulness");
+
+-- CreateIndex
+CREATE INDEX "Answers_helpfulness_answer_name_idx" ON "Answers"("helpfulness", "answer_name");
+
 -- AddForeignKey
 ALTER TABLE "Questions" ADD CONSTRAINT "Questions_productsId_fkey" FOREIGN KEY ("productsId") REFERENCES "Products"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 

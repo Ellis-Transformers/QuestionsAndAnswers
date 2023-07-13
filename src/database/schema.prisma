@@ -27,6 +27,8 @@ model Questions {
 
   products   Products? @relation(fields: [productsId], references: [id])
   productsId Int?
+
+  @@index([question_helpfulness])
 }
 
 model Answers {
@@ -39,6 +41,8 @@ model Answers {
 
   Questions   Questions? @relation(fields: [questionsId], references: [id])
   questionsId Int?
+
+  @@index([helpfulness, answer_name])
 }
 
 model Photos {
