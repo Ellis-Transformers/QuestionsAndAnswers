@@ -3,5 +3,4 @@ node_modules
 .csv
 src/database/answers_photos.csv
 src/database/answers.csv
-
 src/database/questions.csv
