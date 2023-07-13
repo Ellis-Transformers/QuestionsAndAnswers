@@ -6,7 +6,11 @@
   "author": "Jung Hoan Kim",
   "license": "ISC",
   "scripts": {
+    "server-dev": "npx nodemon --watch server index.ts",
     "test": "test"
+  },
+  "prisma": {
+    "schema": "./src/database/schema.prisma"
   },
   "dependencies": {
     "@prisma/client": "^5.0.0",
@@ -15,7 +19,13 @@
     "path": "^0.12.7"
   },
   "devDependencies": {
+    "@types/node": "^20.4.2",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.44.0",
     "nodemon": "^3.0.1",
-    "prisma": "^5.0.0"
+    "prisma": "^5.0.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
   }
 }

@@ -1,11 +1,13 @@
-const express = require('express');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require('dotenv').config();
+import express from 'express';
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT;
 
 
 
-app.listen(PORT, (error)=> {
+app.listen(PORT, (error: any)=> {
   if(!error){
     console.log("Server is running");
     console.log(`App listening on port ${PORT}`);

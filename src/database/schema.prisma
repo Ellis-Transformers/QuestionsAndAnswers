@@ -1,21 +1,17 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+generator client {
+  provider = "prisma-client-js"
+}
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-
-model Products {
-  id        Int                   @id @default(autoincrement())
-  questions QuestionsAndAnswers[]
-  Questions Questions[]
+  url      = "postgresql://postgres:password@127.0.0.1:5432/questions_and_answers?schema=questions_and_answers"
 }
 
 model Questions {
   id                   Int                   @id @default(autoincrement())
   product              Int
-  product_id           Products              @relation(fields: [product], references: [id])
   question_body        String
   question_date        DateTime              @default(now())
   asker_name           String
@@ -29,8 +25,6 @@ model QuestionsAndAnswers {
   question    Int
   answers     Answers[]
   question_id Questions @relation(fields: [question], references: [id])
-  Products    Products @relation(fields: [productsId], references: [id])
-  productsId  Int
 }
 
 model Answers {
@@ -40,7 +34,7 @@ model Answers {
   date                  String
   helpfulness           Boolean
   photos                Photos[]
-  QuestionsAndAnswers   QuestionsAndAnswers? @relation(fields: [questionsAndAnswersId], references: [id])
+  QuestionsAndAnswers   QuestionsAndAnswers @relation(fields: [questionsAndAnswersId], references: [id])
   questionsAndAnswersId Int
   AnswerPhotos          AnswerPhotos[]
 }
