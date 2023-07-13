@@ -4,53 +4,47 @@
 generator client {
   provider = "prisma-client-js"
 }
+
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgres:password@127.0.0.1:5432/questions_and_answers?schema=questions_and_answers"
+  url      = "postgresql://postgres:password@127.0.0.1:5432/questions_and_answers"
+}
+
+model Products {
+  id        Int         @id @default(autoincrement())
+  Questions Questions[]
 }
 
 model Questions {
-  id                   Int                   @id @default(autoincrement())
-  product              Int
-  question_body        String
-  question_date        DateTime              @default(now())
-  asker_name           String
-  question_helpfulness Int
-  reported             Boolean
-  QuestionsAndAnswers  QuestionsAndAnswers[]
-}
+  id                   Int       @id @default(autoincrement())
+  product              Int?
+  question_body        String?
+  question_date        DateTime? @default(now())
+  asker_name           String?
+  question_helpfulness Int?
+  reported             Boolean?
+  Answers              Answers[]
 
-model QuestionsAndAnswers {
-  id          Int       @id @default(autoincrement())
-  question    Int
-  answers     Answers[]
-  question_id Questions @relation(fields: [question], references: [id])
+  products   Products? @relation(fields: [productsId], references: [id])
+  productsId Int?
 }
 
 model Answers {
-  id                    Int                  @id @default(autoincrement())
-  body                  String
-  answer_name           String
-  date                  String
-  helpfulness           Boolean
-  photos                Photos[]
-  QuestionsAndAnswers   QuestionsAndAnswers @relation(fields: [questionsAndAnswersId], references: [id])
-  questionsAndAnswersId Int
-  AnswerPhotos          AnswerPhotos[]
+  id          Int      @id @default(autoincrement())
+  body        String?
+  answer_name String?
+  date        String?
+  helpfulness Boolean?
+  Photos      Photos[]
+
+  Questions   Questions? @relation(fields: [questionsId], references: [id])
+  questionsId Int?
 }
 
 model Photos {
-  id           Int            @id @default(autoincrement())
-  photo        String
-  Answers      Answers       @relation(fields: [answersId], references: [id])
-  answersId    Int
-  AnswerPhotos AnswerPhotos[]
-}
+  id    Int     @id @default(autoincrement())
+  photo String?
 
-model AnswerPhotos {
-  id        Int     @id @default(autoincrement())
-  answer    Int
-  photos    Int[]
-  answer_id Answers @relation(fields: [answer], references: [id])
-  photos_id Photos  @relation(fields: [photos], references: [id])
+  Answers   Answers? @relation(fields: [answersId], references: [id])
+  answersId Int?
 }
