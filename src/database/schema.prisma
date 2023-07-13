@@ -11,12 +11,12 @@ datasource db {
 }
 
 model Products {
-  id        Int         @id @default(autoincrement())
+  id        Int         @id @unique @default(autoincrement())
   Questions Questions[]
 }
 
 model Questions {
-  id                   Int       @id @default(autoincrement())
+  id                   Int       @id @unique @default(autoincrement())
   product              Int?
   question_body        String?
   question_date        DateTime? @default(now())
@@ -32,7 +32,7 @@ model Questions {
 }
 
 model Answers {
-  id          Int      @id @default(autoincrement())
+  id          Int      @id @unique @default(autoincrement())
   body        String?
   answer_name String?
   date        String?
@@ -46,7 +46,7 @@ model Answers {
 }
 
 model Photos {
-  id    Int     @id @default(autoincrement())
+  id    Int     @id @unique @default(autoincrement())
   photo String?
 
   Answers   Answers? @relation(fields: [answersId], references: [id])
