@@ -16,39 +16,41 @@ model Products {
 }
 
 model Questions {
-  id                   Int       @id @unique @default(autoincrement())
-  product              Int?
-  question_body        String?
-  question_date        DateTime? @default(now())
-  asker_name           String?
-  question_helpfulness Int?
-  reported             Boolean?
-  Answers              Answers[]
+  id           Int       @id @unique @default(autoincrement())
+  product_id   Int?
+  body         String?
+  date_written DateTime? @default(now())
+  asker_name   String?
+  asker_email  String?
+  reported     Boolean   @default(false)
+  helpful      Int       @default(0)
+  Answers      Answers[]
 
-  products   Products? @relation(fields: [productsId], references: [id])
-  productsId Int?
+  products Products? @relation(fields: [product_id], references: [id])
 
-  @@index([question_helpfulness])
+  @@index([helpful])
 }
 
 model Answers {
-  id          Int      @id @unique @default(autoincrement())
-  body        String?
-  answer_name String?
-  date        String?
-  helpfulness Boolean?
-  Photos      Photos[]
+  id             Int      @id @unique @default(autoincrement())
+  question_id    Int?
+  body           String?
+  date_written   DateTime @default(now())
+  answerer_name  String?
+  answerer_email String?
+  reported       Boolean  @default(false)
+  helpful        Int      @default(0)
+  Photos         Photos[]
 
-  Questions   Questions? @relation(fields: [questionsId], references: [id])
-  questionsId Int?
+  Questions Questions? @relation(fields: [question_id], references: [id])
 
-  @@index([helpfulness, answer_name])
+  @@index([helpful, answerer_name])
 }
 
 model Photos {
-  id    Int     @id @unique @default(autoincrement())
-  photo String?
+  id         Int     @id @unique @default(autoincrement())
+  answers_Id Int?
+  url        String?
 
-  Answers   Answers? @relation(fields: [answersId], references: [id])
-  answersId Int?
+  Answers Answers? @relation(fields: [answers_Id], references: [id])
 }

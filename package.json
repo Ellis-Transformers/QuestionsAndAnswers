@@ -8,10 +8,12 @@
   "scripts": {
     "server-dev": "npx nodemon --watch server index.ts",
     "test": "test",
-    "prisma-migrate": "npx prisma migrate dev --name init"
+    "prisma-migrate": "npx prisma migrate dev --name init",
+    "prisma-studio": "npx prisma studio"
   },
   "prisma": {
-    "schema": "./src/database/schema.prisma"
+    "schema": "./src/database/schema.prisma",
+    "seed": "ts-node src/seed.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.0.0",
