@@ -13,7 +13,7 @@
   },
   "prisma": {
     "schema": "./src/database/schema.prisma",
-    "seed": "ts-node src/seed.ts"
+    "seed": "ts-node --transpile-only src/seed.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.0.0",
