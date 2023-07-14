@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgres:password@127.0.0.1:5432/questions_and_answers"
+  url      = env("DATABASE_URL")
 }
 
 model Products {
