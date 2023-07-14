@@ -9,7 +9,8 @@
     "server-dev": "npx nodemon --watch server index.ts",
     "test": "test",
     "prisma-migrate": "npx prisma migrate dev --name init",
-    "prisma-studio": "npx prisma studio"
+    "prisma-studio": "npx prisma studio",
+    "seed-db": "npx prisma db seed"
   },
   "prisma": {
     "schema": "./src/database/schema.prisma",

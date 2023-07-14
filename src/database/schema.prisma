@@ -10,47 +10,40 @@ datasource db {
   url      = "postgresql://kjunghoan:password@127.0.0.1:5432/questions_and_answers"
 }
 
-model Products {
-  id        Int         @id @unique @default(autoincrement())
-  Questions Questions[]
-}
-
 model Questions {
   id           Int       @id @unique @default(autoincrement())
   product_id   Int?
   body         String?
-  date_written DateTime? @default(now())
+  date_written BigInt?
   asker_name   String?
   asker_email  String?
   reported     Boolean   @default(false)
   helpful      Int       @default(0)
   Answers      Answers[]
 
-  products Products? @relation(fields: [product_id], references: [id])
-
   @@index([helpful])
 }
 
 model Answers {
-  id             Int      @id @unique @default(autoincrement())
+  id             Int        @id @unique @default(autoincrement())
   question_id    Int?
   body           String?
-  date_written   DateTime @default(now())
+  date_written   BigInt?
   answerer_name  String?
   answerer_email String?
-  reported       Boolean  @default(false)
-  helpful        Int      @default(0)
+  reported       Boolean    @default(false)
+  helpful        Int        @default(0)
   Photos         Photos[]
-
-  Questions Questions? @relation(fields: [question_id], references: [id])
+  Questions      Questions? @relation(fields: [questionsId], references: [id])
+  questionsId    Int?
 
   @@index([helpful, answerer_name])
 }
 
 model Photos {
-  id         Int     @id @unique @default(autoincrement())
-  answers_Id Int?
-  url        String?
+  id        Int     @id @unique @default(autoincrement())
+  answer_id Int?
+  url       String?
 
-  Answers Answers? @relation(fields: [answers_Id], references: [id])
+  Answers Answers? @relation(fields: [answer_id], references: [id])
 }
