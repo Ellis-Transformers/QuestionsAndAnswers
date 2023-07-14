@@ -2,7 +2,7 @@
   "name": "questionsandanswers",
   "description": "This is serverside application to serve the atelier web page",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index.ts",
   "author": "Jung Hoan Kim",
   "license": "ISC",
   "scripts": {
