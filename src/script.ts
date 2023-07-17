@@ -1,7 +1,4 @@
-import { PrismaClient } from "@prisma/client";
-// import path = require("path");
-
-const prisma = new PrismaClient();
+import prisma from "./seed";
 
 async function main() {
   //Write prisma client queries here

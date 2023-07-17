@@ -7,7 +7,7 @@
   "author": "Jung Hoan Kim",
   "license": "MIT",
   "scripts": {
-    "dev": "npx nodemon --watch server index.ts",
+    "dev": "npx nodemon index.ts",
     "test": "test",
     "prisma-migrate": "npx prisma migrate dev --name init",
     "prisma-studio": "npx prisma studio",
