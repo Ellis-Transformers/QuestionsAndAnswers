@@ -8,18 +8,9 @@ export const getHome = async(request:Request, response:Response) => {
   try{response.status(200).json({
       appName: process.env.npm_package_name,
       appVersion: process.env.npm_package_version,
-      options: ["/questions", "/answers", "/getAllQuestions"],
+      options: ["/questions", "/answers"],
     });
   } catch (error:any){
-    return response.status(500).json(error.message);
-  }
-};
-//gets a list of every question that has not been reported regardless of P_id
-export const allQuestions = async(request:Request, response:Response) => {
-  try {
-    const questions = await model.allQuestions();
-    return response.status(200).json(questions)
-  } catch (error:any) {
     return response.status(500).json(error.message);
   }
 };
@@ -35,7 +26,10 @@ export const getQuestionsByProduct = async(request:Request, response:Response)=>
       return response.status(404).json(`Product # ${productId} could not be found.`);
     }
   } catch (error:any) {
-    return response.status(500).json(error.message);
+    return response.status(500).json({
+      Status:500,
+      error:error.message
+    });
   }
 }
 

@@ -3,8 +3,7 @@ import * as dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
 
-import * as controller from "./controller/controller";
-
+import { router } from "./routes/routes";
 dotenv.config();
 
 if(!process.env.PORT) {
@@ -16,9 +15,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use("/home", controller.getHome);
-app.use("/allQuestions", controller.allQuestions);
-app.use("/questions:id", controller.getQuestionsByProduct);
+app.use("/", router);
 
 
 app.listen(PORT, () => {
