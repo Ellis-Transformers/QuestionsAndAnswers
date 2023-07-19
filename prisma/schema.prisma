@@ -41,9 +41,8 @@ model Answers {
 }
 
 model Photos {
-  id        Int     @id @unique @default(autoincrement())
+  id        Int      @id @unique @default(autoincrement())
   answer_id Int?
   url       String?
-
-  Answers Answers? @relation(fields: [answer_id], references: [id])
+  Answers   Answers? @relation(fields: [answer_id], references: [id])
 }

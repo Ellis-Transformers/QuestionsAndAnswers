@@ -4,3 +4,4 @@ node_modules
 prisma/answers_photos.csv
 prisma/answers.csv
 prisma/questions.csv
+prisma/migrations
