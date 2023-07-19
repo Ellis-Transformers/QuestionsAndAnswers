@@ -1,58 +1,9 @@
 import { db } from "../utils/db.server";
+import * as types from "./types"
 
-type Question = {
-  id: number;
-  product_id: number | null;
-  date_written: bigint | null;
-  asker_name: string | null;
-  asker_email: string | null;
-  reported: boolean;
-  helpful: number;
-};
-type Answer = {
-  id: number;
-  question_id: number | null;
-  body: string | null;
-  date_written: bigint | null;
-  answerer_name: string | null;
-  answerer_email: string | null;
-  reported: boolean;
-  helpful: number;
-};
-type Photo = {
-  id: number;
-  answer_id: number | null;
-  url: string | null;
-};
-const questionSelect = {
-  id: true,
-  product_id: true,
-  date_written: true,
-  asker_name: true,
-  asker_email: true,
-  reported: true,
-  helpful: true,
-};
-
-const answerSelect = {
-  id: true,
-  question_id: true,
-  body: true,
-  date_written: true,
-  answerer_name: true,
-  answerer_email: true,
-  reported: true,
-  helpful: true,
-};
-
-const photoSelect = {
-  id: true,
-  answer_id: true,
-  url: true,
-};
-export const getAllQuestions = async (): Promise<Question[]> => {
+export const allQuestions = async (): Promise<types.Question[]> => {
   return await db.questions.findMany({
-    select: questionSelect,
+    select: types.questionSelect,
     where: {
       reported: false
     },
@@ -61,9 +12,9 @@ export const getAllQuestions = async (): Promise<Question[]> => {
     },
   });
 };
-export const getReportedQuestions = async (): Promise<Question[] | null> => {
+export const getReportedQuestions = async (): Promise<types.Question[] | null> => {
   return await db.questions.findMany({
-    select: questionSelect,
+    select: types.questionSelect,
     where: {
       reported: true
     },
@@ -72,21 +23,26 @@ export const getReportedQuestions = async (): Promise<Question[] | null> => {
     },
   });
 };
-export const getQuestionsByProduct = async (product_id: number): Promise<Question[] | null> => {
+export const getQuestionsByProduct = async (id: number): Promise<types.Question[] | null> => {
   return await db.questions.findMany({
-    select: questionSelect,
+    select: types.questionSelect,
     where: {
-      reported: false,
-      product_id: product_id
+      reported: true,
+      product_id: id
     },
     orderBy: {
       helpful: "desc"
     },
   });
 };
-export const getAnswersByQuestion = async (question_id: number): Promise<Answer[] | null> => {
+// export const postQuestion = async()=>{
+//   return db.questions.createMany({
+
+//   })
+// }
+export const getAnswersByQuestion = async (question_id: number): Promise<types.Answer[] | null> => {
   return await db.answers.findMany({
-    select: answerSelect,
+    select: types.answerSelect,
     where: {
       reported: false,
       question_id: question_id
@@ -96,9 +52,9 @@ export const getAnswersByQuestion = async (question_id: number): Promise<Answer[
     },
   });
 };
-export const getPhotosByAnswer = async (answer_id: number): Promise<Photo[] | null> => {
+export const getPhotosByAnswer = async (answer_id: number): Promise<types.Photo[] | null> => {
   return await db.photos.findMany({
-    select: photoSelect,
+    select: types.photoSelect,
     where: {
       answer_id: answer_id,
     },
