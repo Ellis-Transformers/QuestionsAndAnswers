@@ -29,6 +29,7 @@ export const getQuestionsByProduct = async(request:Request, response:Response)=>
   try{
     const questions = await model.getQuestionsByProduct(productId);
     if(questions) {
+      console.log(questions)
       return response.status(200).json(questions);
     } else {
       return response.status(404).json(`Product # ${productId} could not be found.`);

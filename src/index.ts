@@ -15,6 +15,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+
 app.use("/home", controller.getHome);
 app.use("/allQuestions", controller.allQuestions);
 app.use("/questions:id", controller.getQuestionsByProduct);

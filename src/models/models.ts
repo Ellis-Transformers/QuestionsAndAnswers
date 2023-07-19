@@ -23,12 +23,12 @@ export const getReportedQuestions = async (): Promise<types.Question[] | null> =
     },
   });
 };
-export const getQuestionsByProduct = async (id: number): Promise<types.Question[] | null> => {
+export const getQuestionsByProduct = async (product_id: number): Promise<types.Question[] | null> => {
   return await db.questions.findMany({
     select: types.questionSelect,
     where: {
       reported: false,
-      product_id: id
+      product_id
     },
     orderBy: {
       helpful: "desc"
