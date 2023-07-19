@@ -7,5 +7,5 @@ export const router = express.Router();
 
 //gets app information
 router.get("/home", controller.getHome);
-router.get("/answers", controller.getAnswers);
 router.get("/questions/:id", controller.getQuestionsByProduct)
+router.get("/answers/:id", controller.getAnswers);

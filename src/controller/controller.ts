@@ -16,11 +16,10 @@ export const getHome = async(request:Request, response:Response) => {
 };
 //gets a list of questions for a specific Product_id
 export const getQuestionsByProduct = async(request:Request, response:Response)=> {
-  const productId: number = parseInt(request.params.id, 10);
+  const productId: number = parseInt(request.params.id);
   try{
     const questions = await model.getQuestionsByProduct(productId);
     if(questions) {
-      console.log(questions)
       return response.status(200).json(questions);
     } else {
       return response.status(404).json(`Product # ${productId} could not be found.`);
@@ -34,7 +33,19 @@ export const getQuestionsByProduct = async(request:Request, response:Response)=>
 }
 
 export const getAnswers = async(request:Request, response:Response) => {
-  await response.json({
-    todo: "add end points for each question in the database, add an endpoint for each answer for each question",
-  });
+  const questionId: number = parseInt(request.params.id, 10);
+  try{
+    const answers = await model.getAnswersByQuestion(questionId);
+    if(answers) {
+      console.log(answers);
+      return response.status(200).json(answers);
+    } else {
+      return response.status(404).json(`Question # ${questionId} could not be found.`);
+    }
+  } catch(error:any) {
+    return response.status(500).json({
+      Status:500,
+      Error:error.message
+    })
+  }
 };
