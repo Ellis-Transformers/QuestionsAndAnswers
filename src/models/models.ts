@@ -27,7 +27,7 @@ export const getQuestionsByProduct = async (id: number): Promise<types.Question[
   return await db.questions.findMany({
     select: types.questionSelect,
     where: {
-      reported: true,
+      reported: false,
       product_id: id
     },
     orderBy: {

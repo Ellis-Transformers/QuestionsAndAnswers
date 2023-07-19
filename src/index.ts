@@ -2,7 +2,9 @@
 import * as dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
-import controller = require("./controller/index");
+
+import * as controller from "./controller/controller";
+
 dotenv.config();
 
 if(!process.env.PORT) {
@@ -13,11 +15,10 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use("/home", controller.getHome);
+app.use("/allQuestions", controller.allQuestions);
+app.use("/questions:id", controller.getQuestionsByProduct);
 
-
-app.get("/", controller.getHome);
-app.get("/questions", controller.getQuestions);
-app.get("/answers", controller.getAnswers);
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
