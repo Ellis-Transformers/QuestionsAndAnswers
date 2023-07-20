@@ -36,8 +36,6 @@ model Answers {
   Photos         Photos[]
   Questions      Questions? @relation(fields: [questionsId], references: [id])
   questionsId    Int?
-
-  @@index([helpful, answerer_name])
 }
 
 model Photos {
