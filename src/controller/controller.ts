@@ -40,6 +40,24 @@ export const getQuestionsByProduct = async(request:Request, response:Response)=>
   }
 };
 
+//gets a list of questions based off of question_id
+export const getAnswers = async(request:Request, response:Response) => {
+  const questionId: number = parseInt(request.params.id, 10);
+  try{
+    const answers = await model.getAnswersByQuestion(questionId);
+    if(answers) {
+      return response.status(200).json(answers);
+    } else {
+      return response.status(404).json(`Question # ${questionId} could not be found.`);
+    }
+  } catch(error:any) {
+    return response.status(500).json({
+      Status:500,
+      Error:error.message
+    })
+  }
+};
+
 //posts questions
 export const askQuestion = async(request: Request, response: Response) => {
   const errors = validationResult(request);
@@ -59,24 +77,6 @@ export const askQuestion = async(request: Request, response: Response) => {
       Status: 500,
       error: error.message
     });
-  }
-};
-
-//gets a list of questions based off of question_id
-export const getAnswers = async(request:Request, response:Response) => {
-  const questionId: number = parseInt(request.params.id, 10);
-  try{
-    const answers = await model.getAnswersByQuestion(questionId);
-    if(answers) {
-      return response.status(200).json(answers);
-    } else {
-      return response.status(404).json(`Question # ${questionId} could not be found.`);
-    }
-  } catch(error:any) {
-    return response.status(500).json({
-      Status:500,
-      Error:error.message
-    })
   }
 };
 
@@ -115,24 +115,6 @@ export const updateQuestionHelpfulById = async(request:Request, response:Respons
   }
 };
 
-//sends a put to increase answer helpful
-export const updateAnswerHelpfulById = async(request:Request, response:Response) => {
-  const answerId: number = parseInt(request.params.id);
-  try {
-    const answer = await model.updateAnswerHelpful(answerId);
-    if(answer) {
-      return response.status(202).json(answer);
-    } else {
-      return response.status(404).json(`Could not update helpful on Answer # ${answerId}`)
-    }
-  } catch(error: any) {
-    return response.status(500).json({
-      Status:500,
-      error: error.message
-    });
-  }
-};
-
 //sends a put to report a question
 export const reportQuestionById = async(request:Request, response:Response) => {
   const questionId: number = parseInt(request.params.question_id);
@@ -142,6 +124,24 @@ export const reportQuestionById = async(request:Request, response:Response) => {
       return response.status(202).json(question);
     } else {
       return response.status(404).json(`Could not report Question # ${questionId}`);
+    }
+  } catch(error: any) {
+    return response.status(500).json({
+      Status:500,
+      error: error.message
+    });
+  }
+};
+
+//sends a put to increase answer helpful
+export const updateAnswerHelpfulById = async(request:Request, response:Response) => {
+  const answerId: number = parseInt(request.params.id);
+  try {
+    const answer = await model.updateAnswerHelpful(answerId);
+    if(answer) {
+      return response.status(202).json(answer);
+    } else {
+      return response.status(404).json(`Could not update helpful on Answer # ${answerId}`)
     }
   } catch(error: any) {
     return response.status(500).json({
