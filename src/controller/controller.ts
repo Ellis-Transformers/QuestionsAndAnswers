@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as model from "../models/models";
+import { validationResult } from "express-validator"; 
 import type {Request, Response} from "express";
-
 
 //return App Name, current version, and options
 export const getHome = async(request:Request, response:Response) => {
@@ -9,7 +9,7 @@ export const getHome = async(request:Request, response:Response) => {
       response.status(200).json({
       appName: process.env.npm_package_name,
       appVersion: process.env.npm_package_version,
-      options: ["/questions", "/answers"],
+      description: process.env.npm_package_description
     });
   } catch (error:any){
     return response.status(500).json(error.message);
@@ -18,13 +18,19 @@ export const getHome = async(request:Request, response:Response) => {
 
 //gets a list of questions for a specific Product_id
 export const getQuestionsByProduct = async(request:Request, response:Response)=> {
-  const productId: number = parseInt(request.params.id);
+  const errors = validationResult(request);
+  if(!errors.isEmpty()) {
+    return response.status(400).json({errors: errors.array()});
+  }
   try{
-    const questions = await model.getQuestionsByProduct(productId);
+    const product_id: number = parseInt(request.params.product_id);
+    const page: number = parseInt(request.params.page);
+    const count: number = parseInt(request.params.count);
+    const questions = await model.getQuestionsByProduct(product_id, page, count);
     if(questions) {
       return response.status(200).json(questions);
     } else {
-      return response.status(404).json(`Product # ${productId} could not be found.`);
+      return response.status(404).json(`Product # ${product_id} could not be found.`);
     }
   } catch (error:any) {
     return response.status(500).json({
@@ -36,8 +42,12 @@ export const getQuestionsByProduct = async(request:Request, response:Response)=>
 
 //posts questions
 export const askQuestion = async(request: Request, response: Response) => {
-  const newQuestion = request.body;
+  const errors = validationResult(request);
+  if(!errors.isEmpty()) {
+    return response.status(400).json({errors: errors.array()});
+  }
   try {
+    const newQuestion = request.body;
     const postedQuestion = await model.askQuestion(newQuestion);
     if(postedQuestion) {
       return response.status(201).json(`ask question controller worked`);
