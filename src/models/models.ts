@@ -3,19 +3,35 @@ import { db } from "../utils/db.server";
 import * as types from "./types"
 
 //gets all questions for a specific product_id
-export const getQuestionsByProduct = async (product_id: number): Promise<any> => {
-  const questions = await db.questions.findMany({
-    select: types.questionSelect,
+type Question = {
+  question_id: number;
+    question_body: string;
+    question_date: Date | string | number | bigint;
+    asker_name: string;
+    question_helpfulness: number;
+    reported: boolean;
+}
+type getQuestionsByProductReturn = {
+  product_id: number;
+  results: Question[Question[question_id]]
+}
+export const getQuestionsByProduct = async (product_id: number, page: number, count: number): Promise<getQuestionsByProductReturn[]> => {
+  const questions:Question[] = await db.questions.findMany({
+    select:{
+      id: true,
+      body: true,
+      date_written: true,
+      asker_name:true,
+      helpful: true,
+      reported:true,
+    },
     where: {
       reported: false,
-      product_id
-    },
-    orderBy: {
-      helpful: "desc"
-    },
+      product_id: product_id
+    }
   })
-  questions.forEach((question:types.Question)=> {
-    let date = question.date_written;
+  questions.forEach((question:getQuestionsByProductReturn[Question])=> {
+    let date = question.question_date;
     date = typeof(date) !== 'string' && date !== null  ? date.toString() : date;
     if(typeof(date)==='string')date = (parseInt(date,10)/1000);
     question.date_written = date;

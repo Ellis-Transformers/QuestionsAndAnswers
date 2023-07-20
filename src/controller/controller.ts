@@ -28,7 +28,10 @@ export const getQuestionsByProduct = async(request:Request, response:Response)=>
     const count: number = parseInt(request.params.count);
     const questions = await model.getQuestionsByProduct(product_id, page, count);
     if(questions) {
-      return response.status(200).json(questions);
+      return response.status(200).json({
+        product_id: product_id,
+        results: questions
+      });
     } else {
       return response.status(404).json(`Product # ${product_id} could not be found.`);
     }
