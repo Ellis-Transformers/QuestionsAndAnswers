@@ -74,7 +74,7 @@ export const askQuestion = async(request: Request, response: Response) => {
     const newQuestion = request.body;
     const postedQuestion = await model.askQuestion(newQuestion);
     if(postedQuestion) {
-      return response.status(201).json(`ask question controller worked`);
+      return response.status(201);
     } else {
       return response.status(404).json(`Posting Question was not in correct`);
     }
@@ -96,7 +96,7 @@ export const answerQuestion = async(request:Request, response:Response) => {
     const newAnswer = request.body;
     const postedAnswer = await model.answerQuestion(newAnswer);
     if(postedAnswer) {
-      return response.status(201).json(`answer question controller worked`);
+      return response.status(201);
     } else {
       return response.status(404).json(`answer question controller broke`)
     }
@@ -117,7 +117,7 @@ export const updateQuestionHelpfulById = async(request:Request, response:Respons
     const question_id: number = parseInt(request.params.question_id);
     const question = await model.updateQuestionHelpful(question_id);
     if (question) {
-      return response.status(202).json(question);
+      return response.status(204);
     } else {
       return response.status(404).json(`Could not update helpful on Question # ${question_id}`);
     }
@@ -139,7 +139,7 @@ export const reportQuestionById = async(request:Request, response:Response) => {
     const question_id: number = parseInt(request.params.question_id);
     const question = await model.reportQuestion(question_id);
     if(question) {
-      return response.status(202).json(question);
+      return response.status(204);
     } else {
       return response.status(404).json(`Could not report Question # ${question_id}`);
     }
@@ -161,7 +161,7 @@ export const updateAnswerHelpfulById = async(request:Request, response:Response)
     const answer_id: number = parseInt(request.params.answer_id);
     const answer = await model.updateAnswerHelpful(answer_id);
     if(answer) {
-      return response.status(202).json(answer);
+      return response.status(204);
     } else {
       return response.status(404).json(`Could not update helpful on Answer # ${answer_id}`)
     }
@@ -180,12 +180,12 @@ export const reportAnswerById = async(request:Request, response:Response) => {
     return response.status(400).json({errors: errors.array()});
   }
   try {
-    const answerId: number = parseInt(request.params.answer_id);
-    const answer = await model.reportAnswer(answerId);
+    const answer_id: number = parseInt(request.params.answer_id);
+    const answer = await model.reportAnswer(answer_id);
     if(answer) {
-      return response.status(202).json(answer);
+      return response.status(204);
     } else {
-      return response.status(404).json(` Could not report answer # ${answerId}`);
+      return response.status(404).json(` Could not report answer # ${answer_id}`);
     }
   }  catch(error: any) {
     return response.status(500).json({
