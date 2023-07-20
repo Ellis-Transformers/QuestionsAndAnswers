@@ -1,15 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as model from "../models/models";
 import { validationResult } from "express-validator"; 
 import type {Request, Response} from "express";
-
+import * as types from "../models/types"
 //return App Name, current version, and options
 export const getHome = async(request:Request, response:Response) => {
   try {
       response.status(200).json({
       appName: process.env.npm_package_name,
       appVersion: process.env.npm_package_version,
-      description: process.env.npm_package_description
+      // description: process.env.npm_package_description
     });
   } catch (error:any){
     return response.status(500).json(error.message);
@@ -26,9 +25,19 @@ export const getQuestionsByProduct = async(request:Request, response:Response)=>
     const product_id: number = parseInt(request.params.product_id);
     const page: number = parseInt(request.params.page);
     const count: number = parseInt(request.params.count);
-    const questions = await model.getQuestionsByProduct(product_id, page, count);
+    const questions:Omit<types.Question, "product_id" | "asker_email" | "Answers">[] = await model.getQuestionsByProduct(product_id, page, count);
+    
     if(questions) {
-      return response.status(200).json(questions);
+      questions.forEach((question:Omit<types.Question, "product_id" | "asker_email" | "Answers">)=> {
+        let date = question.date_written;
+        date = typeof(date) !== 'string' && date !== null  ? date.toString() : date;
+        if(typeof(date)==='string')date = (parseInt(date,10)/1000);
+        question.date_written = date;
+      })
+      return response.status(200).json({
+        product_id: product_id,
+        results: questions
+      });
     } else {
       return response.status(404).json(`Product # ${product_id} could not be found.`);
     }
@@ -40,7 +49,7 @@ export const getQuestionsByProduct = async(request:Request, response:Response)=>
   }
 };
 
-//gets a list of questions based off of question_id
+//gets a list of answers based off of question_id
 export const getAnswers = async(request:Request, response:Response) => {
   const errors = validationResult(request);
   if(!errors.isEmpty()) {
