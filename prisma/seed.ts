@@ -12,6 +12,7 @@ async function main() {
   // await db.$executeRaw `drop table IF EXISTS "Questions" cascade;`;
   // await db.$executeRaw `drop table IF EXISTS "Answers" cascade;`;
   // await db.$executeRaw `drop table IF EXISTS "Photos";`;
+
   await db.$executeRaw `COPY "Questions"("id", "product_id", "body", "date_written", "asker_name", "asker_email", "reported", "helpful")
   FROM '/home/kjunghoan/hackReactor/week8/QuestionsAndAnswers/prisma/questions.csv'
   DELIMITER ','
