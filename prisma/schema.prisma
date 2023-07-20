@@ -12,11 +12,11 @@ datasource db {
 
 model Questions {
   id           Int       @id @unique @default(autoincrement())
-  product_id   Int?
-  body         String?
-  date_written BigInt?
-  asker_name   String?
-  asker_email  String?
+  product_id   Int
+  body         String
+  date_written BigInt
+  asker_name   String
+  asker_email  String
   reported     Boolean   @default(false)
   helpful      Int       @default(0)
   Answers      Answers[]
@@ -26,14 +26,14 @@ model Questions {
 
 model Answers {
   id             Int        @id @unique @default(autoincrement())
-  question_id    Int?
-  body           String?
-  date_written   BigInt?
-  answerer_name  String?
-  answerer_email String?
+  question_id    Int
+  body           String
+  date_written   BigInt
+  answerer_name  String
+  answerer_email String
   reported       Boolean    @default(false)
   helpful        Int        @default(0)
-  photos         Photos[]
+  Photos         Photos[]
   Questions      Questions? @relation(fields: [questionsId], references: [id])
   questionsId    Int?
 
@@ -42,7 +42,7 @@ model Answers {
 
 model Photos {
   id        Int      @id @unique @default(autoincrement())
-  answer_id Int?
+  answer_id Int
   url       String
   Answers   Answers? @relation(fields: [answer_id], references: [id])
 }
