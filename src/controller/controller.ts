@@ -136,12 +136,12 @@ export const reportQuestionById = async(request:Request, response:Response) => {
     return response.status(400).json({errors: errors.array()});
   }
   try {
-    const questionId: number = parseInt(request.params.question_id);
-    const question = await model.reportQuestion(questionId);
+    const question_id: number = parseInt(request.params.question_id);
+    const question = await model.reportQuestion(question_id);
     if(question) {
       return response.status(202).json(question);
     } else {
-      return response.status(404).json(`Could not report Question # ${questionId}`);
+      return response.status(404).json(`Could not report Question # ${question_id}`);
     }
   } catch(error: any) {
     return response.status(500).json({
