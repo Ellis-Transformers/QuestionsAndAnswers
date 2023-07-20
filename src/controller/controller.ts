@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { STATUS_CODES, request } from "http";
 import * as model from "../models/models";
 import type {Request, Response} from "express";
 
@@ -50,7 +49,7 @@ export const askQuestion = async(request: Request, response: Response) => {
       Status: 500,
       error: error.message
     });
-  };
+  }
 };
 
 //gets a list of questions based off of question_id
