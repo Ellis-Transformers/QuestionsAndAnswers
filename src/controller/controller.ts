@@ -158,12 +158,12 @@ export const updateAnswerHelpfulById = async(request:Request, response:Response)
     return response.status(400).json({errors: errors.array()});
   }
   try {
-    const answerId: number = parseInt(request.params.id);
-    const answer = await model.updateAnswerHelpful(answerId);
+    const answer_id: number = parseInt(request.params.answer_id);
+    const answer = await model.updateAnswerHelpful(answer_id);
     if(answer) {
       return response.status(202).json(answer);
     } else {
-      return response.status(404).json(`Could not update helpful on Answer # ${answerId}`)
+      return response.status(404).json(`Could not update helpful on Answer # ${answer_id}`)
     }
   } catch(error: any) {
     return response.status(500).json({
