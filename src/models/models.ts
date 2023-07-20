@@ -1,68 +1,35 @@
-import { toString } from "express-validator/src/utils";
 import { db } from "../utils/db.server";
 import * as types from "./types"
 
 //gets all questions for a specific product_id
-export const getQuestionsByProduct = async (product_id: number): Promise<any> => {
-  const questions = await db.questions.findMany({
-    select: types.questionSelect,
-    where: {
-      reported: false,
-      product_id
-    },
-    orderBy: {
-      helpful: "desc"
-    },
-  })
-  questions.forEach((question:types.Question)=> {
-    let date = question.date_written;
-    date = typeof(date) !== 'string' && date !== null  ? date.toString() : date;
-    if(typeof(date)==='string')date = (parseInt(date,10)/1000);
-    question.date_written = date;
-  })
-  return questions;
-};
-
-//creates a question entry that gets posted to the database
-export const askQuestion = async (newQuestion: Omit<types.Question, "id"|"reported"|"helpful">): Promise<types.Question> => {
-  const {product_id, body, asker_name, asker_email} = newQuestion;
-  let { date_written} = newQuestion;
-    date_written = Date.parse(toString(date_written));
-  return db.questions.create({
-    data: {
-      product_id,
-      body,
-      date_written,
-      asker_name,
-      asker_email
-    },
+export const getQuestionsByProduct = async (product_id: number, page:number, count:number): Promise<Omit<types.Question, "product_id" | "asker_email" | "Answers">[]> => {
+  return await db.questions.findMany({
+    skip: (page * count),
+    take: count,
     select: {
-      id:true,
-      reported:true,
-      helpful:true,
-      product_id: true,
+      id: true,
       body: true,
       date_written: true,
       asker_name: true,
-      asker_email: true
-    }
-  })
-};
-
-//gets all the answers for a specific question_id
-export const getAnswersByQuestion = async (question_id: number): Promise<any> => {
-  const answers = await db.answers.findMany({
-    // select: types.answerSelect,
-    include: {
-      photos: true
+      helpful: true,
+      reported: true
     },
     where: {
       reported: false,
-      question_id: question_id
+      product_id: product_id
     },
     orderBy: {
       helpful: "desc"
     },
+  });
+};
+
+//gets all the answers for a specific question_id
+export const getAnswersByQuestion = async (question_id: number, page: number, count: number): Promise<any> => {
+  const answers = await db.answers.findMany({
+    skip: (page * count),
+    take:count,
+
   });
   answers.forEach((answer:any)=> {
       let date = answer.date_written;
@@ -73,6 +40,11 @@ export const getAnswersByQuestion = async (question_id: number): Promise<any> =>
       return answer.date_written = date;
   })
   return answers;
+};
+
+//creates a question entry that gets posted to the database
+export const askQuestion = async (newQuestion) => {
+ 
 };
 
 //creates entires in the answers table of the database
@@ -113,6 +85,18 @@ export const updateQuestionHelpful = async (question_id: number): Promise<types.
   })
 };
 
+//sets reported to true for a specified question
+export const reportQuestion = async (question_id: number): Promise<any> => {
+  return db.questions.update({
+    where: {
+      id: question_id
+    },
+    data: {
+      reported: true
+    }
+  });
+};
+
 //increments the value of helpful in an answer when passed an answer_id
 export const updateAnswerHelpful = async (answer_id: number): Promise<any> => {
   return db.answers.update({
@@ -125,18 +109,6 @@ export const updateAnswerHelpful = async (answer_id: number): Promise<any> => {
       }
     }
   })
-};
-
-//sets reported to true for a specified question
-export const reportQuestion = async (question_id: number): Promise<any> => {
-  return db.questions.update({
-    where: {
-      id: question_id
-    },
-    data: {
-      reported: true
-    }
-  });
 };
 
 //sets reported to true for a specific answer
