@@ -1,5 +1,6 @@
 export type Question = {
   id: number;
+  body: string | null;
   product_id: number | null;
   date_written: bigint | number | string | Date | null;
   asker_name: string | null;
@@ -16,13 +17,16 @@ export type Answer = {
   answerer_email: string | null;
   reported: boolean;
   helpful: number;
+  photos: Photo[];
 };
 export type Photo = {
   id: number;
+  answer_id: number
   url: string|null;
 };
 export const questionSelect = {
   id: true,
+  body: true,
   product_id: true,
   date_written: true,
   asker_name: true,

@@ -1,8 +1,9 @@
+import { toString } from "express-validator/src/utils";
 import { db } from "../utils/db.server";
 import * as types from "./types"
 
-
-export const getQuestionsByProduct = async (product_id: number): Promise<types.Question[] | null> => {
+//gets all questions for a specific product_id
+export const getQuestionsByProduct = async (product_id: number): Promise<any> => {
   const questions = await db.questions.findMany({
     select: types.questionSelect,
     where: {
@@ -22,11 +23,38 @@ export const getQuestionsByProduct = async (product_id: number): Promise<types.Q
   return questions;
 };
 
-export const getAnswersByQuestion = async (question_id: number): Promise<types.Answer[] | null> => {
+//creates a question entry that gets posted to the database
+export const askQuestion = async (newQuestion: Omit<types.Question, "id"|"reported"|"helpful">): Promise<types.Question> => {
+  const {product_id, body, asker_name, asker_email} = newQuestion;
+  let { date_written} = newQuestion;
+    date_written = Date.parse(toString(date_written));
+  return db.questions.create({
+    data: {
+      product_id,
+      body,
+      date_written,
+      asker_name,
+      asker_email
+    },
+    select: {
+      id:true,
+      reported:true,
+      helpful:true,
+      product_id: true,
+      body: true,
+      date_written: true,
+      asker_name: true,
+      asker_email: true
+    }
+  })
+};
+
+//gets all the answers for a specific question_id
+export const getAnswersByQuestion = async (question_id: number): Promise<any> => {
   const answers = await db.answers.findMany({
     // select: types.answerSelect,
     include: {
-      Photos: true
+      photos: true
     },
     where: {
       reported: false,
@@ -47,12 +75,78 @@ export const getAnswersByQuestion = async (question_id: number): Promise<types.A
   return answers;
 };
 
-export const getPhotosByAnswer = async (answer_id: number): Promise<types.Photo[] | null> => {
-  return await db.photos.findMany({
-    select: types.photoSelect,
+//creates entires in the answers table of the database
+export const answerQuestion = async(newAnswer:any): Promise<any> => {
+  const {question_id, body, answerer_name, answerer_email, photos}=newAnswer;
+  const createEntry = ()=> {
+    db.answers.create({
+    data: {
+      question_id,
+      body,
+      answerer_name,
+      answerer_email,
+    }
+  });
+  photos.forEach((photo:any)=> {
+    db.photos.create({
+      data: {
+        answer_id:photo.answer_id,
+        url: photo.url,
+      }
+    });
+  });
+};
+  return createEntry();
+}
+
+// increments the value of helpful in a question when passed a question_id
+export const updateQuestionHelpful = async (question_id: number): Promise<types.Question> => {
+  return db.questions.update({
     where: {
-      answer_id,
+      id: question_id
     },
+    data: {
+      helpful: {
+        increment: 1
+      }
+    }
+  })
+};
+
+//increments the value of helpful in an answer when passed an answer_id
+export const updateAnswerHelpful = async (answer_id: number): Promise<any> => {
+  return db.answers.update({
+    where: {
+      id: answer_id
+    },
+    data: {
+      helpful: {
+        increment: 1
+      }
+    }
+  })
+};
+
+//sets reported to true for a specified question
+export const reportQuestion = async (question_id: number): Promise<any> => {
+  return db.questions.update({
+    where: {
+      id: question_id
+    },
+    data: {
+      reported: true
+    }
   });
 };
 
+//sets reported to true for a specific answer
+export const reportAnswer = async (answer_id: number): Promise<any> => {
+  return db.answers.update({
+    where: {
+      id: answer_id
+    },
+    data: {
+      reported: true
+    }
+  });
+};
