@@ -1,41 +1,28 @@
 export type Question = {
   id: number;
-  body: string | null;
-  product_id: number | null;
-  date_written: bigint | number | string | Date | null;
-  asker_name: string | null;
-  asker_email: string | null;
+  body: string;
+  product_id: number;
+  date_written: bigint | number | string | Date;
+  asker_name: string;
+  asker_email: string;
   reported: boolean;
-  helpful: number;
+  helpfulness: number;
 };
 export type Answer = {
   id: number;
-  question_id: number | null;
-  body: string | null;
-  date_written: bigint | number | string | Date | null;
-  answerer_name: string | null;
-  answerer_email: string | null;
+  question_id: number;
+  body: string;
+  date_written: bigint | number | string | Date;
+  answerer_name: string;
+  answerer_email: string;
   reported: boolean;
-  helpful: number;
-  photos: Photo[];
-};
-export type Photo = {
-  id: number;
-  answer_id: number
-  url: string|null;
-};
-export const questionSelect = {
-  id: true,
-  body: true,
-  product_id: true,
-  date_written: true,
-  asker_name: true,
-  asker_email: true,
-  reported: true,
-  helpful: true
+  helpfulness: number;
+  Photos: object[]|[];
 };
 
-export const photoSelect = {
-  id: true,
-  url: true,
+
+
+export type Photo = {
+  id: number | null;
+  url: string | null;
 };
