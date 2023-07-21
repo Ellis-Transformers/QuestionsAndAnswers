@@ -1,8 +1,6 @@
 import * as model from "../models/models";
-import { validationResult } from "express-validator"; 
 import type {Request, Response} from "express";
 import * as types from "../models/types"
-import { db } from "../utils/db.server";
 //return App Name, current version
 export const getHome = async(request:Request, response:Response) => {
   try {
@@ -18,10 +16,6 @@ export const getHome = async(request:Request, response:Response) => {
 
 //gets a list of questions for a specific Product_id
 export const getQuestionsByProduct = async(request:Request, response:Response)=> {
-  const errors = validationResult(request);
-  if(!errors.isEmpty()) {
-    return response.status(400).json({errors: errors.array()});
-  }
   try{
     const product_id: number = parseInt(request.params.product_id);
     const page: number = parseInt(request.params.page);
@@ -52,12 +46,8 @@ export const getQuestionsByProduct = async(request:Request, response:Response)=>
 
 //gets a list of answers based off of question_id
 export const getAnswers = async(request:Request, response:Response) => {
-  const errors = validationResult(request);
-  if(!errors.isEmpty()) {
-    return response.status(400).json({errors: errors.array()});
-  }
   try{
-    const question_id: number = parseInt(request.params.product_id);
+    const question_id: number = Number(request.params.product_id);
     const page: number = Number(request.query.page);
     const count: number = Number(request.query.count);
     const answers:Array<Omit<types.Answer, "question_id" | "answerer_email" | "reported" >> = await model.getAnswersByQuestion(question_id, page, count);
@@ -84,10 +74,6 @@ export const getAnswers = async(request:Request, response:Response) => {
 
 //posts questions
 export const askQuestion = async(request: Request, response: Response) => {
-  const errors = validationResult(request);
-  if(!errors.isEmpty()) {
-    return response.status(400).json({errors: errors.array()});
-  }
   try {
     const newQuestion = request.body;
     const postedQuestion = await model.askQuestion(newQuestion);
@@ -106,19 +92,11 @@ export const askQuestion = async(request: Request, response: Response) => {
 
 //posted an answer to database
 export const answerQuestion = async(request:Request, response:Response) => {
-  const errors = validationResult(request);
-  if(!errors.isEmpty()) {
-    return response.status(400).json({errors: errors.array()});
-  }
+
   try {
     const newAnswer = request.body;
     const postedAnswer = await model.answerQuestion(newAnswer);
     if(postedAnswer) {
-      if(request.body.photos.length > 0){
-        await db.photos.createMany({
-          data: 
-        })
-      }
       return response.status(201).json(newAnswer);
     } else {
       return response.status(404).json(`answer question controller broke`)
@@ -132,12 +110,8 @@ export const answerQuestion = async(request:Request, response:Response) => {
 };
 //sends a put to increase question helpful
 export const updateQuestionHelpfulById = async(request:Request, response:Response) => {
-  const errors = validationResult(request);
-  if(!errors.isEmpty()) {
-    return response.status(400).json({errors: errors.array()});
-  }
   try {
-    const question_id: number = parseInt(request.params.question_id);
+    const question_id: number = Number(request.params.question_id);
     const question = await model.updateQuestionHelpful(question_id);
     if (question) {
       return response.status(204);
@@ -154,12 +128,8 @@ export const updateQuestionHelpfulById = async(request:Request, response:Respons
 
 //sends a put to report a question
 export const reportQuestionById = async(request:Request, response:Response) => {
-  const errors = validationResult(request);
-  if(!errors.isEmpty()) {
-    return response.status(400).json({errors: errors.array()});
-  }
   try {
-    const question_id: number = parseInt(request.params.question_id);
+    const question_id: number = Number(request.params.question_id);
     const question = await model.reportQuestion(question_id);
     if(question) {
       return response.status(204);
@@ -176,12 +146,8 @@ export const reportQuestionById = async(request:Request, response:Response) => {
 
 //sends a put to increase answer helpful
 export const updateAnswerHelpfulById = async(request:Request, response:Response) => {
-  const errors = validationResult(request);
-  if(!errors.isEmpty()) {
-    return response.status(400).json({errors: errors.array()});
-  }
   try {
-    const answer_id: number = parseInt(request.params.answer_id);
+    const answer_id: number = Number(request.params.answer_id);
     const answer = await model.updateAnswerHelpful(answer_id);
     if(answer) {
       return response.status(204);
@@ -198,12 +164,8 @@ export const updateAnswerHelpfulById = async(request:Request, response:Response)
 
 //sends a put to report an answer
 export const reportAnswerById = async(request:Request, response:Response) => {
-  const errors = validationResult(request);
-  if(!errors.isEmpty()) {
-    return response.status(400).json({errors: errors.array()});
-  }
   try {
-    const answer_id: number = parseInt(request.params.answer_id);
+    const answer_id: number = Number(request.params.answer_id);
     const answer = await model.reportAnswer(answer_id);
     if(answer) {
       return response.status(204);
