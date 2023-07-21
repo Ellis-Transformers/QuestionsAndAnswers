@@ -89,43 +89,70 @@ export const answerQuestion = async(
     name: string,
     email: string,
     photos:{
-      question_id:number,
+      answer_id:number,
       url:string
     }[]|[]
-  }): Promise<Omit<types.Answer,"Photo">> => {
+  }): Promise<unknown> => {
     const {question_id, body, name, email, photos} = newAnswer;
-    const date = Date.now();
     return await db.answers.create({
       data: {
-        question_id,
+        question_id: Number(question_id),
         body,
-        date_written: date,
+        date_written: BigInt(Date.now()),
         answerer_name: name,
         answerer_email: email,
-      }
+        Photos: Object(photos.map((photo)=>photo))
+      },
     });
 }
 
 // increments the value of helpful in a question when passed a question_id
 export const updateQuestionHelpful = async (question_id: number):
-Promise<types.Question> => {
-
+Promise<unknown> => {
+  return await db.questions.update({
+    where: {id: question_id
+    },
+    data: {
+      helpfulness:{ increment: 1}
+    }
+  })
 };
 
 //sets reported to true for a specified question
 export const reportQuestion = async (question_id: number):
-Promise<any> => {
-
+Promise<unknown> => {
+  return await db.questions.update({
+    where:{
+      id: question_id
+    },
+    data:{
+      reported:true
+    }
+  })
 };
 
 //increments the value of helpful in an answer when passed an answer_id
 export const updateAnswerHelpful = async (answer_id: number):
-Promise<any> => {
-
+Promise<unknown> => {
+  return await db.answers.update({
+    where: {
+      id: answer_id
+    },
+    data: {
+      helpfulness: {increment: 1}
+    }
+  })
 };
 
 //sets reported to true for a specific answer
 export const reportAnswer = async (answer_id: number):
-Promise<any> => {
-
+Promise<unknown> => {
+  return await db.answers.update({
+    where: {
+      id: answer_id
+    },
+    data: {
+      reported:true
+    }
+  })
 };
