@@ -6,7 +6,7 @@ export type Question = {
   asker_name: string;
   asker_email: string;
   reported: boolean;
-  helpfulness: number;
+  helpful: number;
 };
 export type Answer = {
   id: number;
@@ -16,7 +16,7 @@ export type Answer = {
   answerer_name: string;
   answerer_email: string;
   reported: boolean;
-  helpfulness: number;
+  helpful: number;
   Photos: object[]|[];
 };
 

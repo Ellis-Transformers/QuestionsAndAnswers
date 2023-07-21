@@ -3,7 +3,6 @@
   "description": "This is serverside application to serve the atelier web page",
   "version": "1.0.0",
   "main": "index.ts",
-  "type": "module",
   "author": "Jung Hoan Kim",
   "license": "MIT",
   "scripts": {

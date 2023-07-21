@@ -15,15 +15,15 @@ export const getQuestionsByProduct = async(
       body: true,
       date_written: true,
       asker_name: true,
-      helpfulness: true,
+      helpful: true,
       reported: true
     },
     where: {
       reported: false,
-      product_id
+      product_id: product_id
     },
     orderBy: {
-      helpfulness: "desc"
+      helpful: "asc"
     },
   });
 };
@@ -42,7 +42,7 @@ export const getAnswersByQuestion = async(
       body: true,
       date_written: true,
       answerer_name: true,
-      helpfulness: true,
+      helpful: true,
       Photos:{
         select: {
           id: true,
@@ -55,7 +55,7 @@ export const getAnswersByQuestion = async(
       question_id,
     },
     orderBy: {
-      helpfulness: "desc"
+      helpful: "desc"
     }
   });
 };
@@ -88,12 +88,13 @@ export const answerQuestion = async(
     body: string,
     name: string,
     email: string,
-    photos:{
-      answer_id:number,
-      url:string
-    }[]|[]
+    photos:string[]|[]
   }): Promise<unknown> => {
     const {question_id, body, name, email, photos} = newAnswer;
+    const listOfPhotos = photos.map((photo:string)=> {
+      return {url:photo}
+    });
+
     return await db.answers.create({
       data: {
         question_id: Number(question_id),
@@ -101,8 +102,29 @@ export const answerQuestion = async(
         date_written: BigInt(Date.now()),
         answerer_name: name,
         answerer_email: email,
-        Photos: Object(photos.map((photo)=>photo))
+        Photos: {
+          createMany: {
+            data: listOfPhotos
+          }
+        }
       },
+      select: {
+        id: true,
+        question_id: true,
+        body: true,
+        date_written: true,
+        answerer_name: true,
+        answerer_email: true,
+        reported: true,
+        helpful: true,
+        Photos: {
+          select: {
+            id: true,
+            answer_id: true,
+            url: true
+          }
+        }
+      }
     });
 }
 
@@ -113,7 +135,7 @@ Promise<unknown> => {
     where: {id: question_id
     },
     data: {
-      helpfulness:{ increment: 1}
+      helpful:{ increment: 1}
     }
   })
 };
@@ -139,7 +161,7 @@ Promise<unknown> => {
       id: answer_id
     },
     data: {
-      helpfulness: {increment: 1}
+      helpful: {increment: 1}
     }
   })
 };
