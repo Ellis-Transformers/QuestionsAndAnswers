@@ -4,7 +4,7 @@
 "compilerOptions": {
   "allowJs": true,
   "declaration": true,
-  "module": "commonjs",
+  "module": "CommonJS",
   "emitDeclarationOnly": true,
   "declarationMap": true,
   "sourceMap": true,

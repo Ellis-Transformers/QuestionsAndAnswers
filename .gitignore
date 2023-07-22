@@ -1,8 +1,2 @@
 node_modules
 .env
-.csv
-prisma/answers_photos.csv
-prisma/answers.csv
-prisma/questions.csv
-prisma/migrations
-ignore.js
