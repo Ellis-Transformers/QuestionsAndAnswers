@@ -9,12 +9,10 @@
     "dev": "nodemon src/index.ts",
     "test": "test",
     "prisma-migrate": "npx prisma migrate dev",
-    "prisma-studio": "npx prisma studio",
-    "seed-db": "npx prisma db seed"
+    "prisma-studio": "npx prisma studio"
   },
   "prisma": {
-    "schema": "./prisma/schema.prisma",
-    "seed": "ts-node-esm --transpile-only prisma/seed.ts"
+    "schema": "./prisma/schema.prisma"
   },
   "dependencies": {
     "@prisma/client": "^5.0.0",

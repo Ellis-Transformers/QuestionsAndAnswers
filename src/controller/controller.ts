@@ -2,7 +2,7 @@ import * as model from "../models/models";
 import type {Request, Response} from "express";
 import { validationResult } from "express-validator";
 import * as types from "../models/types"
-//return App Name, current version
+
 export const getHome = async(request:Request, response:Response) => {
   try {
       response.status(200).json({
@@ -14,19 +14,16 @@ export const getHome = async(request:Request, response:Response) => {
     return response.status(500).json(error.message);
   }
 };
-
-//gets a list of questions for a specific Product_id
 export const getQuestionsByProduct = async(request:Request, response:Response)=> {
   const errors = validationResult(request);
   if(!errors.isEmpty()) {
     return response.status(400).json({errors: errors.array()});
   }
   try{
-    const product_id: number = Number(request.params.product_id);
-    const page: number = Number(request.params.page);
-    const count: number = Number(request.params.count);
+    const product_id: number = Number(request.body.product_id);
+    const page: number = Number(request.body.page);
+    const count: number = Number(request.body.count);
     const questions:Omit<types.Question, "product_id" | "asker_email" >[] = await model.getQuestionsByProduct(product_id, page, count);
-    
     if(questions) {
       questions.map((question:Omit<types.Question, "product_id" | "asker_email">)=> {
         let date = question.date_written;
@@ -49,14 +46,13 @@ export const getQuestionsByProduct = async(request:Request, response:Response)=>
   }
 };
 
-//gets a list of answers based off of question_id
 export const getAnswers = async(request:Request, response:Response) => {
   const errors = validationResult(request);
   if(!errors.isEmpty()) {
     return response.status(400).json({errors: errors.array()});
   }
   try{
-    const question_id: number = Number(request.params.product_id);
+    const question_id: any = request.params.product_id;
     const page: number = Number(request.query.page);
     const count: number = Number(request.query.count);
     const answers:Array<Omit<types.Answer, "question_id" | "answerer_email" | "reported" >> = await model.getAnswersByQuestion(question_id, page, count);
@@ -81,7 +77,6 @@ export const getAnswers = async(request:Request, response:Response) => {
   }
 };
 
-//posts questions
 export const askQuestion = async(request: Request, response: Response) => {
   const errors = validationResult(request);
   if(!errors.isEmpty()) {
@@ -110,9 +105,13 @@ const errors = validationResult(request);
     return response.status(400).json({errors: errors.array()});
   }
   try {
-    const newAnswer = request.body;
-    const postedAnswer = await model.answerQuestion(newAnswer);
+    console.dir(request.body)
+    const newAnswer = await request.body;
+    const question_id = request.params.question_id;
+    const postedAnswer = await model.answerQuestion(question_id,newAnswer);
+    console.dir(newAnswer)
     if(postedAnswer) {
+      console.log("this rran")
       return response.status(201).json(newAnswer);
     } else {
       return response.status(404).json(`answer question controller broke`)
@@ -132,12 +131,12 @@ export const updateQuestionHelpfulById = async(request:Request, response:Respons
     return response.status(400).json({errors: errors.array()});
   }
   try {
-    const question_id: number = Number(request.params.question_id);
+    const question_id: number = parseInt(request.params.question_id);
     const question = await model.updateQuestionHelpful(question_id);
     if (question) {
-      return response.status(204);
+      return response.status(204).send();
     } else {
-      return response.status(404).json(`Could not update helpful on Question # ${question_id}`);
+      return response.status(400).json(`Could not update helpful on Question # ${question_id}`);
     }
   } catch (error:any) {
     return response.status(500).json({
@@ -154,10 +153,12 @@ export const reportQuestionById = async(request:Request, response:Response) => {
     return response.status(400).json({errors: errors.array()});
   }
   try {
-    const question_id: number = Number(request.params.question_id);
+    console.dir(request.params.question_id)
+    const question_id: number = parseInt(request.params.question_id);
     const question = await model.reportQuestion(question_id);
+    console.log(question_id)
     if(question) {
-      return response.status(204);
+      return response.sendStatus(204);
     } else {
       return response.status(404).json(`Could not report Question # ${question_id}`);
     }
@@ -173,10 +174,10 @@ export const reportQuestionById = async(request:Request, response:Response) => {
 export const updateAnswerHelpfulById = async(request:Request, response:Response) => {
   
   try {
-    const answer_id: number = Number(request.params.answer_id);
+    const answer_id: number = parseInt(request.params.answer_id);
     const answer = await model.updateAnswerHelpful(answer_id);
     if(answer) {
-      return response.status(204);
+      return response.sendStatus(204);
     } else {
       return response.status(404).json(`Could not update helpful on Answer # ${answer_id}`)
     }
@@ -195,10 +196,10 @@ export const reportAnswerById = async(request:Request, response:Response) => {
     return response.status(400).json({errors: errors.array()});
   } 
   try {
-    const answer_id: number = Number(request.params.answer_id);
+    const answer_id: number = parseInt(request.params.answer_id);
     const answer = await model.reportAnswer(answer_id);
     if(answer) {
-      return response.status(204);
+      return response.sendStatus(204);
     } else {
       return response.status(404).json(` Could not report answer # ${answer_id}`);
     }

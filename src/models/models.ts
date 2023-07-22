@@ -23,7 +23,7 @@ export const getQuestionsByProduct = async(
       product_id: product_id
     },
     orderBy: {
-      helpful: "asc"
+      helpful: "desc"
     },
   });
 };
@@ -83,18 +83,19 @@ export const askQuestion = async(
 
 //creates entires in the answers table of the database
 export const answerQuestion = async(
+  question_id:string,
   newAnswer:{
-    question_id: number,
     body: string,
     name: string,
     email: string,
     photos:string[]|[]
   }): Promise<unknown> => {
-    const {question_id, body, name, email, photos} = newAnswer;
+    const {body, name, email, photos} = newAnswer;
     const listOfPhotos = photos.map((photo:string)=> {
       return {url:photo}
     });
-
+    console.log(question_id)
+    console.log("somwethingdasdg")
     return await db.answers.create({
       data: {
         question_id: Number(question_id),
@@ -132,10 +133,19 @@ export const answerQuestion = async(
 export const updateQuestionHelpful = async (question_id: number):
 Promise<unknown> => {
   return await db.questions.update({
-    where: {id: question_id
+    where: {
+      id: question_id
     },
     data: {
       helpful:{ increment: 1}
+    },
+    select: {
+      id: true,
+      body: true,
+      date_written: true,
+      asker_name: true,
+      helpful: true,
+      reported: true
     }
   })
 };
@@ -143,6 +153,7 @@ Promise<unknown> => {
 //sets reported to true for a specified question
 export const reportQuestion = async (question_id: number):
 Promise<unknown> => {
+  console.log(`this shit ran`)
   return await db.questions.update({
     where:{
       id: question_id
