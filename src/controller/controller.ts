@@ -111,7 +111,6 @@ const errors = validationResult(request);
     const postedAnswer = await model.answerQuestion(question_id,newAnswer);
     console.dir(newAnswer)
     if(postedAnswer) {
-      console.log("this rran")
       return response.status(201).json(newAnswer);
     } else {
       return response.status(404).json(`answer question controller broke`)
@@ -156,7 +155,6 @@ export const reportQuestionById = async(request:Request, response:Response) => {
     console.dir(request.params.question_id)
     const question_id: number = parseInt(request.params.question_id);
     const question = await model.reportQuestion(question_id);
-    console.log(question_id)
     if(question) {
       return response.sendStatus(204);
     } else {

@@ -94,8 +94,6 @@ export const answerQuestion = async(
     const listOfPhotos = photos.map((photo:string)=> {
       return {url:photo}
     });
-    console.log(question_id)
-    console.log("somwethingdasdg")
     return await db.answers.create({
       data: {
         question_id: Number(question_id),
@@ -153,7 +151,6 @@ Promise<unknown> => {
 //sets reported to true for a specified question
 export const reportQuestion = async (question_id: number):
 Promise<unknown> => {
-  console.log(`this shit ran`)
   return await db.questions.update({
     where:{
       id: question_id
