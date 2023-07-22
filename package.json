@@ -7,6 +7,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon src/index.ts",
+    "deploy":"node src/index.ts",
     "test": "test",
     "prisma-migrate": "npx prisma migrate dev",
     "prisma-studio": "npx prisma studio"
