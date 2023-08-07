@@ -1,20 +1,21 @@
 {
-  // Change this to match your project
-"include": ["./src"],
-"compilerOptions": {
-  "allowJs": true,
-  "declaration": true,
-  "module": "CommonJS",
-  "emitDeclarationOnly": true,
-  "declarationMap": true,
-  "sourceMap": true,
-  "outDir": "dist",
-  "strict": true,
-  "lib":["ESNext"],
-  "esModuleInterop": true
-},
-"ts-node": {
-  "esm": true,
-  "experimentalSpecifierResolution": "node"
-}
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node"
+  },
+  "compilerOptions": {
+    "allowJs": true,
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
+    "esModuleInterop": true,
+    "lib":["ESNext"],
+    "moduleResolution": "node",
+    "module": "ESNext",
+    "outDir": "dist",
+    "sourceMap": true,
+    "strict": true,
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
 }
