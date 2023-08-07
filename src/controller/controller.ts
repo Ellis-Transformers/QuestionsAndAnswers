@@ -52,7 +52,7 @@ export const getAnswers = async (request: Request, response: Response) => {
     return response.status(400).json({ errors: errors.array() });
   }
   try {
-    const question_id: string = request.params.product_id;
+    const question_id: number = Number(request.params.product_id);
     const page: number = Number(request.query.page);
     const count: number = Number(request.query.count);
     const answers: Array<
