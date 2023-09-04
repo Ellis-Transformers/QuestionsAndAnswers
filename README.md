@@ -1,8 +1,8 @@
-## QuestionsAndAnswers
+# QuestionsAndAnswers
 
 This is a microservice meant to serve the questions and answers section of the clarinetssdc application Which is a typical e-commerce web page
 
-# Installation & Requirements
+## Installation & Requirements
 
 This project utilizes:
 
